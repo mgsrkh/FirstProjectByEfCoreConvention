@@ -12,6 +12,7 @@ namespace FirstProject.ApplicationServices.IServices
         bool Update(VendorUpdateDTO dto);
         bool Delete(int id);
         bool Patch(int id);
-        VendorDTO GetByIdForPatch(int id);
+        bool GetByIdForPatch(VendorPatchDTO dto, int id);
+        bool GetByIdForJsonPatch(JsonPatchDocument<VendorDTO> vendorPatch, int id);
     }
 }

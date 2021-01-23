@@ -53,5 +53,11 @@ namespace FirstProject.InferaStructure.Repositories
             _db.Vendor.Update(result);
             return _db.SaveChanges();
         }
+
+        public int VendorPatchUpdate(Vendor vendor)
+        {
+            _db.Vendor.AsNoTrackingWithIdentityResolution().FirstOrDefault(r => r.Id == vendor.Id);
+            return _db.SaveChanges();
+        }
     }
 }

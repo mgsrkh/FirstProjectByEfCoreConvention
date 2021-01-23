@@ -10,12 +10,12 @@ namespace FirstProject.DTOs.Vendors
     {
         public VendorUpdateDTO()
         {
-            Tags = new TagDTO();            
+            Tags = new List<TagDTO>();            
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; }
-        public TagDTO Tags { get; set; }
+        public List<TagDTO> Tags { get; set; }
     }
 }

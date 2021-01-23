@@ -56,14 +56,26 @@ namespace FirstProject.Controllers
             {
                 return BadRequest();
             }
-        }       
+        }
+        //[HttpPatch("{id}")]
+        //public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorDTO> patch, [FromRoute] int id)
+        //{
+        //    var res = _vendorService.GetByIdForJsonPatch(patch, id);
+        //    if (res)
+        //    {
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
         [HttpPatch("{id}")]
-        public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorDTO> patch, [FromRoute] int id)
+        public IActionResult PatchVendor([FromBody] VendorPatchDTO patch, [FromRoute] int id)
         {
-            VendorDTO res = _vendorService.GetByIdForPatch(id);
-            if (res != null)
+            var result = _vendorService.GetByIdForPatch(patch, id);
+            if (result)
             {
-                patch.ApplyTo(res);
                 return Ok();
             }
             else

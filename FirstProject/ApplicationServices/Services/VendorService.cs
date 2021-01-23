@@ -124,21 +124,40 @@ namespace FirstProject.ApplicationServices.Services
 
             var vendor = _repository.GetById(dto.Id);
 
-            var getTagVendorIdById = new Tag()
-            {
-                VendorId = dto.Id
-            };
+            //var vendorTagList = new List<Tag>();
 
-            _tagRepository.DeleteById(getTagVendorIdById.VendorId);
+
+            foreach (var item in dto.Tags)
+            {
+                var getTagVendorIdById = new Tag()
+                {
+                    VendorId = dto.Id
+                    //VendorId = dto.Id
+                };
+                //vendorTagList.Remove(getTagVendorIdById);
+                _tagRepository.DeleteById(getTagVendorIdById.VendorId);
+            }
+
+            // _tagRepository.DeleteById(getTagVendorIdById.VendorId);
 
             var tagList = new List<Tag>();
 
-            var tags = new Tag()
+            foreach (var item in dto.Tags)
             {
-                Name = dto.Tags.Name,
-                Value = dto.Tags.Value
-            };
-            tagList.Add(tags);
+                var tags = new Tag()
+                {
+                    Name = item.Name,
+                    Value = item.Value
+                };
+                tagList.Add(tags);
+            }
+
+            //var tags = new Tag()
+            //{
+            //    Name = dto.Tags.Name,
+            //    Value = dto.Tags.Value
+            //};
+            //tagList.Add(tags);
 
             //Second Approach to Update
             //if (dto.Tags != null && dto.Tags.Count > 0)
@@ -192,17 +211,51 @@ namespace FirstProject.ApplicationServices.Services
             return result;
         }
 
-        public VendorDTO GetByIdForPatch(int id)
+        public bool GetByIdForPatch(VendorPatchDTO dto, int id)
         {
+            bool result = false;
             var Mapdto = _repository.GetById(id);
 
-            var result = new VendorDTO()
+            Mapdto.Name = dto.Name; //Map Only Name For Patch
+
+            int inserted = _repository.Update(Mapdto);
+            if (inserted > 0)
             {
-                Name = Mapdto.Name,
-                //Title = Mapdto.Title,
-                //Date = Mapdto.Date
+                result = true;
+            }
+            return result;
+        }
+
+        public bool GetByIdForJsonPatch(JsonPatchDocument<VendorDTO> vendorPatch, int id)
+        {
+            bool result = false;
+            var vendor = _repository.GetById(id);
+
+            var Patch = new VendorDTO()
+            {
+                //Id = vendor.Id,
+                Name = vendor.Name,
+                Title = vendor.Title,
+                Date = vendor.Date,
+                //Tags = vendor.Tags // u have to map this tag List
             };
 
+            vendorPatch.ApplyTo(Patch);
+
+            var finalMap = new Vendor()
+            {
+                Id = id,
+                Name = Patch.Name,
+                Title = Patch.Title,
+                Date = Patch.Date,
+                //Tags = Patch.Tags
+            };
+
+            int Patched = _repository.VendorPatchUpdate(finalMap);
+            if (Patched > 0)
+            {
+                result = true;
+            }
             return result;
         }
     }
