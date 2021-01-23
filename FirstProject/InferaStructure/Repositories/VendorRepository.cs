@@ -47,16 +47,20 @@ namespace FirstProject.InferaStructure.Repositories
             _db.Vendor.Remove(result);
             return _db.SaveChanges();
         }
-        public int Patch(int id)
+        public Vendor Patch(Vendor vendor , int id)
         {
-            var result = _db.Vendor.Where(x => x.Id == id).FirstOrDefault();
-            _db.Vendor.Update(result);
-            return _db.SaveChanges();
+            _db.Set<Vendor>().Find(id);
+            _db.Entry(vendor).State = EntityState.Detached;
+            _db.Vendor.Update(vendor);
+            _db.SaveChanges();
+            return vendor;
         }
 
-        public int VendorPatchUpdate(Vendor vendor)
+        public int VendorPatchUpdate(Vendor vendor, int id)
         {
-            _db.Vendor.AsNoTrackingWithIdentityResolution().FirstOrDefault(r => r.Id == vendor.Id);
+            _db.Vendor.AsNoTracking().FirstOrDefault(r => r.Id == id);
+            _db.Entry(vendor).State = EntityState.Detached;
+            _db.Vendor.Update(vendor);
             return _db.SaveChanges();
         }
     }

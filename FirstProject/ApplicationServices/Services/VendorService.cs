@@ -198,19 +198,6 @@ namespace FirstProject.ApplicationServices.Services
 
             return result;
         }
-
-        public bool Patch(int id)
-        {
-            bool result = false;
-
-            var isPatched = _repository.Patch(id);
-            if (isPatched > 0)
-            {
-                result = true;
-            }
-            return result;
-        }
-
         public bool GetByIdForPatch(VendorPatchDTO dto, int id)
         {
             bool result = false;
@@ -226,9 +213,9 @@ namespace FirstProject.ApplicationServices.Services
             return result;
         }
 
-        public bool GetByIdForJsonPatch(JsonPatchDocument<VendorDTO> vendorPatch, int id)
+        public Vendor GetByIdForJsonPatch(JsonPatchDocument<VendorDTO> vendorPatch, int id)
         {
-            bool result = false;
+            //bool result = false;
             var vendor = _repository.GetById(id);
 
             var Patch = new VendorDTO()
@@ -251,12 +238,9 @@ namespace FirstProject.ApplicationServices.Services
                 //Tags = Patch.Tags
             };
 
-            int Patched = _repository.VendorPatchUpdate(finalMap);
-            if (Patched > 0)
-            {
-                result = true;
-            }
-            return result;
+            var Patched = _repository.Patch(finalMap,id);
+
+            return Patched;
         }
     }
 }

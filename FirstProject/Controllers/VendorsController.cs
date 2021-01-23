@@ -57,24 +57,11 @@ namespace FirstProject.Controllers
                 return BadRequest();
             }
         }
-        //[HttpPatch("{id}")]
-        //public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorDTO> patch, [FromRoute] int id)
-        //{
-        //    var res = _vendorService.GetByIdForJsonPatch(patch, id);
-        //    if (res)
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
         [HttpPatch("{id}")]
-        public IActionResult PatchVendor([FromBody] VendorPatchDTO patch, [FromRoute] int id)
+        public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorDTO> patch, [FromRoute] int id)
         {
-            var result = _vendorService.GetByIdForPatch(patch, id);
-            if (result)
+            var res = _vendorService.GetByIdForJsonPatch(patch, id);
+            if (res != null)
             {
                 return Ok();
             }
@@ -83,6 +70,19 @@ namespace FirstProject.Controllers
                 return BadRequest();
             }
         }
+        //[HttpPatch("{id}")]
+        //public IActionResult PatchVendor([FromBody] VendorPatchDTO patch, [FromRoute] int id)
+        //{
+        //    var result = _vendorService.GetByIdForPatch(patch, id);
+        //    if (result)
+        //    {
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         [HttpDelete("{id}")]
         public IActionResult DeleteVendor([FromRoute] int id)
