@@ -47,12 +47,18 @@ namespace FirstProject.InferaStructure.Repositories
             _db.Vendor.Remove(result);
             return _db.SaveChanges();
         }
-        public Vendor Patch(Vendor vendor , int id)
+        public Vendor Patch(Vendor vendor)
         {
-            _db.Set<Vendor>().Find(id);
-            _db.Entry(vendor).State = EntityState.Detached;
             _db.Vendor.Update(vendor);
             _db.SaveChanges();
+            return vendor;
+        }
+
+        public Vendor GetByIdForPatch(int id) 
+        {
+            var vendor = _db.Set<Vendor>().Find(id);
+            _db.Vendor.AsNoTracking();
+            _db.Entry(vendor).State = EntityState.Deleted;            
             return vendor;
         }
 

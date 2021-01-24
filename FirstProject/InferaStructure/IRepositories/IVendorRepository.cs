@@ -13,6 +13,8 @@ namespace FirstProject.InferaStructure.IRepositories
         int VendorPatchUpdate(Vendor vendor, int id);
         int Delete(Vendor vendor);
         int DeleteById(int id);
-        Vendor Patch(Vendor vendor ,int id);
+        Vendor GetByIdForPatch(int id);
+        Vendor Patch(Vendor vendor);
+
     }
 }

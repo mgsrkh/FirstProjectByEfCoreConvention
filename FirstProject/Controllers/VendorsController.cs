@@ -58,7 +58,7 @@ namespace FirstProject.Controllers
             }
         }
         [HttpPatch("{id}")]
-        public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorDTO> patch, [FromRoute] int id)
+        public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorJsonPatchDTO> patch, [FromRoute] int id)
         {
             var res = _vendorService.GetByIdForJsonPatch(patch, id);
             if (res != null)

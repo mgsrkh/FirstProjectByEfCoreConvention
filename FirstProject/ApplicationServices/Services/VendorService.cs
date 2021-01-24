@@ -213,32 +213,38 @@ namespace FirstProject.ApplicationServices.Services
             return result;
         }
 
-        public Vendor GetByIdForJsonPatch(JsonPatchDocument<VendorDTO> vendorPatch, int id)
+        public Vendor GetByIdForJsonPatch(JsonPatchDocument<VendorJsonPatchDTO> vendorPatch, int id)
         {
             //bool result = false;
-            var vendor = _repository.GetById(id);
+            var vendor = _repository.GetByIdForPatch(id);
 
-            var Patch = new VendorDTO()
+            var tags = vendor.Tags.Select(t => new TagDTO
+            {
+                Name = t.Name,
+                Value = t.Value,
+            }).ToList();
+
+            var firstMap = new VendorJsonPatchDTO()
             {
                 //Id = vendor.Id,
                 Name = vendor.Name,
                 Title = vendor.Title,
                 Date = vendor.Date,
-                //Tags = vendor.Tags // u have to map this tag List
+                Tags = tags // u have to map this tag List
             };
 
-            vendorPatch.ApplyTo(Patch);
+            vendorPatch.ApplyTo(firstMap);
 
-            var finalMap = new Vendor()
+            var SecondMap = new Vendor()
             {
                 Id = id,
-                Name = Patch.Name,
-                Title = Patch.Title,
-                Date = Patch.Date,
-                //Tags = Patch.Tags
+                Name = firstMap.Name,
+                Title = firstMap.Title,
+                Date = firstMap.Date,
+                Tags = vendor.Tags
             };
 
-            var Patched = _repository.Patch(finalMap,id);
+            var Patched = _repository.Patch(SecondMap);
 
             return Patched;
         }
