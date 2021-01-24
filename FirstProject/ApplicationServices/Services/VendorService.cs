@@ -20,48 +20,9 @@ namespace FirstProject.ApplicationServices.Services
             _tagRepository = tagRepository;
         }
 
-        public VendorDTO GetAll(int id)
+        public VendorDTO GetVendorsById(int id)
         {
-            //var vendors = _repository.GetAll();
-            //var vendorTags = _tagRepository.GetAll();
-
-            //var tags = vendorTags.Select(x => new TagDTO
-            //{
-            //    //Id = x.Id,
-            //    Name = x.Name,
-            //    Value = x.Value,
-            //    //VendorId = x.Vendor.Id // or x.VendorId
-            //}).ToList();
-
-            //var tags = new TagDTO()
-            //{
-            //    Name = vendorTags.Name,
-            //    Value = vendorTags.Value
-            //};
-
-            //var vendor = vendors.Select(x => new VendorDTO
-            //{
-            //    Id = x.Id,
-            //    Name = x.Name,
-            //    Title = x.Title,
-            //    Date = x.Date,
-            //    //Tags = tags
-            //    Tags = tags.Select(x=>x.Name).ToList()
-            //}).ToList();
-
-            //foreach (var item in vendors)
-            //{
-            //    var vendorWithTags = new VendorDTO()
-            //    {
-            //        Name = item.Name,
-            //        Title = item.Title,
-            //        Date = item.Date,
-            //        Tags = item.Tags.Select(x => x.Name).ToList()
-            //    };
-            //}
-
-            //return new VendorGridResultDTO(vendors);
-            var vendor = _repository.GetAll(id);
+            var vendor = _repository.GetVendorById(id);
 
             var tags = vendor.Tags.Select(x => new TagDTO
             {
@@ -82,9 +43,9 @@ namespace FirstProject.ApplicationServices.Services
             return vendorMapDto;
         }
 
-        public bool Insert(VendorInsertDTO dto)
+        public Vendor Insert(VendorResponseDTO dto)
         {
-            bool result = false;
+            //bool result = false;
 
             var vendorTagList = new List<Tag>();
 
@@ -101,7 +62,6 @@ namespace FirstProject.ApplicationServices.Services
                 }
             }
 
-
             var vendor = new Vendor()
             {
                 Name = dto.Name,
@@ -113,9 +73,9 @@ namespace FirstProject.ApplicationServices.Services
             int inserted = _repository.Insert(vendor);
             if (inserted > 0)
             {
-                result = true;
+                return vendor;
             }
-            return result;
+            return null;
         }
 
         public bool Update(VendorUpdateDTO dto)
@@ -124,21 +84,14 @@ namespace FirstProject.ApplicationServices.Services
 
             var vendor = _repository.GetById(dto.Id);
 
-            //var vendorTagList = new List<Tag>();
-
-
             foreach (var item in dto.Tags)
             {
                 var getTagVendorIdById = new Tag()
                 {
                     VendorId = dto.Id
-                    //VendorId = dto.Id
                 };
-                //vendorTagList.Remove(getTagVendorIdById);
                 _tagRepository.DeleteById(getTagVendorIdById.VendorId);
             }
-
-            // _tagRepository.DeleteById(getTagVendorIdById.VendorId);
 
             var tagList = new List<Tag>();
 
@@ -151,27 +104,6 @@ namespace FirstProject.ApplicationServices.Services
                 };
                 tagList.Add(tags);
             }
-
-            //var tags = new Tag()
-            //{
-            //    Name = dto.Tags.Name,
-            //    Value = dto.Tags.Value
-            //};
-            //tagList.Add(tags);
-
-            //Second Approach to Update
-            //if (dto.Tags != null && dto.Tags.Count > 0)
-            //{
-            //    foreach (var item in dto.Tags)
-            //    {
-            //        var tags = new Tag
-            //        {
-            //            Name = item.Name,
-            //            Value = item.Value
-            //        };
-            //        tagList.Add(tags);
-            //    }
-            //}
 
             vendor.Name = dto.Name;
             vendor.Title = dto.Title;
@@ -198,24 +130,9 @@ namespace FirstProject.ApplicationServices.Services
 
             return result;
         }
-        public bool GetByIdForPatch(VendorPatchDTO dto, int id)
-        {
-            bool result = false;
-            var Mapdto = _repository.GetById(id);
-
-            Mapdto.Name = dto.Name; //Map Only Name For Patch
-
-            int inserted = _repository.Update(Mapdto);
-            if (inserted > 0)
-            {
-                result = true;
-            }
-            return result;
-        }
 
         public Vendor GetByIdForJsonPatch(JsonPatchDocument<VendorJsonPatchDTO> vendorPatch, int id)
         {
-            //bool result = false;
             var vendor = _repository.GetByIdForPatch(id);
 
             var tags = vendor.Tags.Select(t => new TagDTO
@@ -226,11 +143,10 @@ namespace FirstProject.ApplicationServices.Services
 
             var firstMap = new VendorJsonPatchDTO()
             {
-                //Id = vendor.Id,
                 Name = vendor.Name,
                 Title = vendor.Title,
                 Date = vendor.Date,
-                Tags = tags // u have to map this tag List
+                Tags = tags
             };
 
             vendorPatch.ApplyTo(firstMap);

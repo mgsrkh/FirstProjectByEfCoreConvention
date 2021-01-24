@@ -26,23 +26,16 @@ namespace FirstProject.Controllers
         [HttpGet("{id}")]
         public IActionResult GetVendors([FromRoute] int id)
         {
-            var result = _vendorService.GetAll(id);
+            var result = _vendorService.GetVendorsById(id);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult InsertVendor([FromBody] VendorInsertDTO dto)
+        public IActionResult InsertVendor([FromBody] VendorResponseDTO dto)
         {
-            var result = _vendorService.Insert(dto);
+            var vendorInsertResponse = _vendorService.Insert(dto);
 
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Created(new Uri($"/api/Vendors/{dto.Id}", UriKind.Relative), vendorInsertResponse);
         }
         [HttpPut]
         public IActionResult UpdateVendor(VendorUpdateDTO dto)
@@ -70,20 +63,6 @@ namespace FirstProject.Controllers
                 return BadRequest();
             }
         }
-        //[HttpPatch("{id}")]
-        //public IActionResult PatchVendor([FromBody] VendorPatchDTO patch, [FromRoute] int id)
-        //{
-        //    var result = _vendorService.GetByIdForPatch(patch, id);
-        //    if (result)
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
         [HttpDelete("{id}")]
         public IActionResult DeleteVendor([FromRoute] int id)
         {

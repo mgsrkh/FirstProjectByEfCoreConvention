@@ -17,7 +17,7 @@ namespace FirstProject.InferaStructure.Repositories
         {
             _db = db;
         }
-        public Vendor GetAll(int id)
+        public Vendor GetVendorById(int id)
         {
             return _db.Vendor.Where(x => x.Id == id).Include(x => x.Tags).FirstOrDefault();
         }
@@ -60,14 +60,6 @@ namespace FirstProject.InferaStructure.Repositories
             _db.Vendor.AsNoTracking();
             _db.Entry(vendor).State = EntityState.Deleted;            
             return vendor;
-        }
-
-        public int VendorPatchUpdate(Vendor vendor, int id)
-        {
-            _db.Vendor.AsNoTracking().FirstOrDefault(r => r.Id == id);
-            _db.Entry(vendor).State = EntityState.Detached;
-            _db.Vendor.Update(vendor);
-            return _db.SaveChanges();
         }
     }
 }

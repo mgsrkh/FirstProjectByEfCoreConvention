@@ -7,11 +7,10 @@ namespace FirstProject.ApplicationServices.IServices
 {
     public interface IVendorService
     {
-        VendorDTO GetAll(int id);
-        bool Insert(VendorInsertDTO dto);
+        VendorDTO GetVendorsById(int id);
+        Vendor Insert(VendorResponseDTO dto);
         bool Update(VendorUpdateDTO dto);
         bool Delete(int id);
-        bool GetByIdForPatch(VendorPatchDTO dto, int id);
         Vendor GetByIdForJsonPatch(JsonPatchDocument<VendorJsonPatchDTO> vendorPatch, int id);
     }
 }
