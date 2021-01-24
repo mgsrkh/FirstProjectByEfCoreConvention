@@ -54,11 +54,17 @@ namespace FirstProject.InferaStructure.Repositories
             return vendor;
         }
 
-        public Vendor GetByIdForPatch(int id) 
+        public int SavePatchChanges(Vendor vendor)
+        {
+            _db.Vendor.Update(vendor);
+            return _db.SaveChanges();
+        }
+
+        public Vendor GetByIdForPatch(int id)
         {
             var vendor = _db.Set<Vendor>().Find(id);
             _db.Vendor.AsNoTracking();
-            _db.Entry(vendor).State = EntityState.Deleted;            
+            _db.Entry(vendor).State = EntityState.Detached;
             return vendor;
         }
     }

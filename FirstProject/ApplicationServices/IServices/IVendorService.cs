@@ -7,10 +7,12 @@ namespace FirstProject.ApplicationServices.IServices
 {
     public interface IVendorService
     {
+        Vendor GetVendorByIdForJsonPatchDoc(int id);
         VendorDTO GetVendorsById(int id);
-        Vendor Insert(VendorResponseDTO dto);
-        bool Update(VendorUpdateDTO dto);
+        Vendor Insert(VendorInsertResponseDTO dto);
+        Vendor Update(VendorUpdateDTO dto);
         bool Delete(int id);
         Vendor GetByIdForJsonPatch(JsonPatchDocument<VendorJsonPatchDTO> vendorPatch, int id);
+        int SavePatchChanges(Vendor vendor);
     }
 }

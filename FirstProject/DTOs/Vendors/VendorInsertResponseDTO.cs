@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FirstProject.DTOs.Vendors
 {
-    public class VendorResponseDTO : VendorInsertDTO
+    public class VendorInsertResponseDTO : VendorInsertDTO
     {
         [Required]
         public int Id { get; set; }

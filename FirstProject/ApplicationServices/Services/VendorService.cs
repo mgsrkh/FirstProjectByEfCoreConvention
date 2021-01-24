@@ -43,10 +43,8 @@ namespace FirstProject.ApplicationServices.Services
             return vendorMapDto;
         }
 
-        public Vendor Insert(VendorResponseDTO dto)
+        public Vendor Insert(VendorInsertResponseDTO dto)
         {
-            //bool result = false;
-
             var vendorTagList = new List<Tag>();
 
             if (dto.Tags != null && dto.Tags.Count > 0)
@@ -78,10 +76,8 @@ namespace FirstProject.ApplicationServices.Services
             return null;
         }
 
-        public bool Update(VendorUpdateDTO dto)
+        public Vendor Update(VendorUpdateDTO dto)
         {
-            bool result = false;
-
             var vendor = _repository.GetById(dto.Id);
 
             foreach (var item in dto.Tags)
@@ -113,9 +109,9 @@ namespace FirstProject.ApplicationServices.Services
             int inserted = _repository.Update(vendor);
             if (inserted > 0)
             {
-                result = true;
+                return vendor;
             }
-            return result;
+            return null;
         }
         public bool Delete(int id)
         {
@@ -163,6 +159,16 @@ namespace FirstProject.ApplicationServices.Services
             var Patched = _repository.Patch(SecondMap);
 
             return Patched;
+        }
+
+        public Vendor GetVendorByIdForJsonPatchDoc(int id)
+        {
+            return _repository.GetByIdForPatch(id);
+        }
+
+        public int SavePatchChanges(Vendor vendor)
+        {
+            return _repository.SavePatchChanges(vendor);
         }
     }
 }

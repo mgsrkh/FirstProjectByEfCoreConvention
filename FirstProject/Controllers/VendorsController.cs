@@ -1,5 +1,6 @@
 ﻿using Amazon.EC2.Model;
 using FirstProject.ApplicationServices.IServices;
+using FirstProject.DTOs.Tags;
 using FirstProject.DTOs.Vendors;
 using FirstProject.InferaStructure.IRepositories;
 using FirstProject.Models;
@@ -31,30 +32,53 @@ namespace FirstProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult InsertVendor([FromBody] VendorResponseDTO dto)
+        public IActionResult InsertVendor([FromBody] VendorInsertResponseDTO dto)
         {
             var vendorInsertResponse = _vendorService.Insert(dto);
 
-            return Created(new Uri($"/api/Vendors/{dto.Id}", UriKind.Relative), vendorInsertResponse);
+            return Created(new Uri($"/api/Vendors/{vendorInsertResponse.Id}", UriKind.Relative),
+                new VendorInsertResponseDTO()
+                {
+                    Id = vendorInsertResponse.Id,
+                    Name = vendorInsertResponse.Name,
+                    Title = vendorInsertResponse.Title,
+                    Date = vendorInsertResponse.Date,
+                    Tags = vendorInsertResponse.Tags.Select(x => new TagDTO
+                    {
+                        Name = x.Name,
+                        Value = x.Value
+                    }).ToList()
+                }); ; ;
         }
+
         [HttpPut]
         public IActionResult UpdateVendor(VendorUpdateDTO dto)
         {
-            var result = _vendorService.Update(dto);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var vendorUpdateResponse = _vendorService.Update(dto);
+
+            return Created(new Uri($"/api/Vendors/{vendorUpdateResponse.Id}", UriKind.Relative),
+                new VendorUpdateDTO()
+                {
+                    Id = vendorUpdateResponse.Id,
+                    Name = vendorUpdateResponse.Name,
+                    Title = vendorUpdateResponse.Title,
+                    Date = vendorUpdateResponse.Date,
+                    Tags = vendorUpdateResponse.Tags.Select(x => new TagDTO
+                    {
+                        Name = x.Name,
+                        Value = x.Value
+                    }).ToList()
+                }); ; ;
         }
         [HttpPatch("{id}")]
-        public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<VendorJsonPatchDTO> patch, [FromRoute] int id)
+        public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<Vendor> patch, [FromRoute] int id)
         {
-            var res = _vendorService.GetByIdForJsonPatch(patch, id);
-            if (res != null)
+            var jsonPatchApply = _vendorService.GetVendorByIdForJsonPatchDoc(id);
+
+            patch.ApplyTo(jsonPatchApply);
+
+            var savePatched = _vendorService.SavePatchChanges(jsonPatchApply);
+            if (savePatched > 0)
             {
                 return Ok();
             }

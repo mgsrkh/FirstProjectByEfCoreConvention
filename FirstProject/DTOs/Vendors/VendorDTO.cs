@@ -1,4 +1,5 @@
-﻿using FirstProject.DTOs.Tags;
+﻿using FirstProject.CustomAnnotation;
+using FirstProject.DTOs.Tags;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,8 +22,7 @@ namespace FirstProject.DTOs.Vendors
         public string Title { get; set; }
         [Required]
         public DateTime Date { get; set; }
-        [Required]
-        [MaxLength(128)]
+        [TagsIcollectionAnnotation]
         public ICollection<TagDTO> Tags { get; set; }
 
     }
