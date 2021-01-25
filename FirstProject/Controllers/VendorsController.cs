@@ -36,19 +36,7 @@ namespace FirstProject.Controllers
         {
             var vendorInsertResponse = _vendorService.Insert(dto);
 
-            return Created(new Uri($"/api/Vendors/{vendorInsertResponse.Id}", UriKind.Relative),
-                new VendorInsertResponseDTO()
-                {
-                    Id = vendorInsertResponse.Id,
-                    Name = vendorInsertResponse.Name,
-                    Title = vendorInsertResponse.Title,
-                    Date = vendorInsertResponse.Date,
-                    Tags = vendorInsertResponse.Tags.Select(x => new TagDTO
-                    {
-                        Name = x.Name,
-                        Value = x.Value
-                    }).ToList()
-                }); ; ;
+            return Created(new Uri($"/api/Vendors/{vendorInsertResponse.Id}", UriKind.Relative), vendorInsertResponse);
         }
 
         [HttpPut]
@@ -56,19 +44,14 @@ namespace FirstProject.Controllers
         {
             var vendorUpdateResponse = _vendorService.Update(dto);
 
-            return Created(new Uri($"/api/Vendors/{vendorUpdateResponse.Id}", UriKind.Relative),
-                new VendorUpdateDTO()
-                {
-                    Id = vendorUpdateResponse.Id,
-                    Name = vendorUpdateResponse.Name,
-                    Title = vendorUpdateResponse.Title,
-                    Date = vendorUpdateResponse.Date,
-                    Tags = vendorUpdateResponse.Tags.Select(x => new TagDTO
-                    {
-                        Name = x.Name,
-                        Value = x.Value
-                    }).ToList()
-                }); ; ;
+            if (vendorUpdateResponse)
+            {
+                return Ok(vendorUpdateResponse);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
         [HttpPatch("{id}")]
         public StatusCodeResult PatchVendor([FromBody] JsonPatchDocument<Vendor> patch, [FromRoute] int id)

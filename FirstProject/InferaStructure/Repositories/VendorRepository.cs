@@ -25,10 +25,11 @@ namespace FirstProject.InferaStructure.Repositories
         {
             return _db.Vendor.Find(id);
         }
-        public int Insert(Vendor vendor)
+        public Vendor Insert(Vendor vendor)
         {
             _db.Vendor.Add(vendor);
-            return _db.SaveChanges();
+            _db.SaveChanges();
+            return vendor;
         }
         public int Update(Vendor vendor)
         {

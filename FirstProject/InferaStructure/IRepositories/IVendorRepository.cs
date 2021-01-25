@@ -8,7 +8,7 @@ namespace FirstProject.InferaStructure.IRepositories
     {
         Vendor GetVendorById(int id);
         Vendor GetById(int id);
-        int Insert(Vendor vendor);
+        Vendor Insert(Vendor vendor);
         int Update(Vendor vendor);
         int Delete(Vendor vendor);
         int DeleteById(int id);

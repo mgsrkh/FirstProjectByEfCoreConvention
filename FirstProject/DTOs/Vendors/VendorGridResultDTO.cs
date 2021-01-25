@@ -1,4 +1,5 @@
-﻿using FirstProject.DTOs.Tags;
+﻿using FirstProject.CustomAnnotation;
+using FirstProject.DTOs.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace FirstProject.DTOs.Vendors
         {
             VendorDTOs = vendorDTOs;
         }
+        [TagsIcollectionAnnotation]
         public ICollection<VendorDTO> VendorDTOs { get; set; }
     }
 }

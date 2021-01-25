@@ -43,7 +43,7 @@ namespace FirstProject.ApplicationServices.Services
             return vendorMapDto;
         }
 
-        public Vendor Insert(VendorInsertResponseDTO dto)
+        public VendorInsertResponseDTO Insert(VendorInsertResponseDTO dto)
         {
             var vendorTagList = new List<Tag>();
 
@@ -62,22 +62,38 @@ namespace FirstProject.ApplicationServices.Services
 
             var vendor = new Vendor()
             {
+                Id = dto.Id,
                 Name = dto.Name,
                 Title = dto.Title,
                 Date = dto.Date,
                 Tags = vendorTagList
             };
+         
+            var inserted = _repository.Insert(vendor);
 
-            int inserted = _repository.Insert(vendor);
-            if (inserted > 0)
+            var vendorDto = new VendorInsertResponseDTO()
             {
-                return vendor;
+                Id = inserted.Id,
+                Name = inserted.Name,
+                Title = inserted.Title,
+                Date = inserted.Date,
+                Tags = inserted.Tags.Select(x => new TagDTO
+                {
+                    Name = x.Name,
+                    Value = x.Value
+                }).ToList()
+            };
+            if (vendorDto != null)
+            {
+                return vendorDto;
             }
             return null;
         }
 
-        public Vendor Update(VendorUpdateDTO dto)
+        public bool Update(VendorUpdateDTO dto)
         {
+            bool updated = false;
+
             var vendor = _repository.GetById(dto.Id);
 
             foreach (var item in dto.Tags)
@@ -109,9 +125,9 @@ namespace FirstProject.ApplicationServices.Services
             int inserted = _repository.Update(vendor);
             if (inserted > 0)
             {
-                return vendor;
+                updated = true;
             }
-            return null;
+            return updated;
         }
         public bool Delete(int id)
         {
