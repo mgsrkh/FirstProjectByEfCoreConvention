@@ -68,7 +68,7 @@ namespace FirstProject.ApplicationServices.Services
                 Date = dto.Date,
                 Tags = vendorTagList
             };
-         
+
             var inserted = _repository.Insert(vendor);
 
             var vendorDto = new VendorInsertResponseDTO()
