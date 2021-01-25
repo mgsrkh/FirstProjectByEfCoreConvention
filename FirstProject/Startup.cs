@@ -36,7 +36,6 @@ namespace FirstProject
             services.AddDbContext<ProjectContext>(option => option
             .UseSqlServer(_configuration["ConnectionString"]));
 
-            //Dependency Injection Service Registartion
             services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IVendorService, VendorService>();
